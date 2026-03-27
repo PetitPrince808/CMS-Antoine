@@ -95,6 +95,33 @@ class Page
     /** @return Collection<int, Page> */
     public function getChildren(): Collection { return $this->children; }
 
+    /**
+     * Ajoute une page enfant à la collection et maintient la cohérence
+     * de la relation bidirectionnelle (enfant pointe vers ce parent).
+     */
+    public function addChild(self $child): static
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Retire une page enfant de la collection et réinitialise son parent
+     * si elle pointait encore vers ce parent.
+     */
+    public function removeChild(self $child): static
+    {
+        if ($this->children->removeElement($child)) {
+            if ($child->getParent() === $this) {
+                $child->setParent(null);
+            }
+        }
+        return $this;
+    }
+
     public function getGalerie(): ?Galerie { return $this->galerie; }
     public function setGalerie(?Galerie $galerie): static { $this->galerie = $galerie; return $this; }
 

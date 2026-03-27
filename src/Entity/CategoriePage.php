@@ -40,4 +40,31 @@ class CategoriePage
 
     /** @return Collection<int, Page> */
     public function getPages(): Collection { return $this->pages; }
+
+    /**
+     * Ajoute une page à la collection et maintient la cohérence
+     * de la relation bidirectionnelle (la page pointe vers cette catégorie).
+     */
+    public function addPage(Page $page): static
+    {
+        if (!$this->pages->contains($page)) {
+            $this->pages->add($page);
+            $page->setCategoriePage($this);
+        }
+        return $this;
+    }
+
+    /**
+     * Retire une page de la collection et réinitialise sa catégorie
+     * si elle pointait encore vers cette catégorie.
+     */
+    public function removePage(Page $page): static
+    {
+        if ($this->pages->removeElement($page)) {
+            if ($page->getCategoriePage() === $this) {
+                $page->setCategoriePage(null);
+            }
+        }
+        return $this;
+    }
 }
