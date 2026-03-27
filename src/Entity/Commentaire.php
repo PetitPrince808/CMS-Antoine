@@ -15,7 +15,7 @@ class Commentaire
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $contenu = null;
+    private string $contenu = '';
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
@@ -38,7 +38,7 @@ class Commentaire
 
     public function getId(): ?int { return $this->id; }
 
-    public function getContenu(): ?string { return $this->contenu; }
+    public function getContenu(): string { return $this->contenu; }
 
     public function setContenu(string $contenu): static { $this->contenu = $contenu; return $this; }
 

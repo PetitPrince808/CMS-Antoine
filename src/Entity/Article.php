@@ -90,6 +90,26 @@ class Article
 
     public function getCommentaires(): Collection { return $this->commentaires; }
 
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setArticle($this);
+        }
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // orphanRemoval: true supprimera le commentaire en base lors du flush
+            if ($commentaire->getArticle() === $this) {
+                $commentaire->setArticle(null);
+            }
+        }
+        return $this;
+    }
+
     public function getAuteur(): ?User { return $this->auteur; }
 
     public function setAuteur(?User $auteur): static { $this->auteur = $auteur; return $this; }
