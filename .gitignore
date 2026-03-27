@@ -13,3 +13,19 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+
+# Configuration éditeur
+.vscode/
+.idea/
+
+# Fichiers binaires et documents
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.gif
+
+# Fichiers d'environnement locaux
+.env.dev
+.env.local
+.env.*.local
