@@ -1,4 +1,8 @@
 security:
+    role_hierarchy:
+        ROLE_REDACTEUR: ROLE_USER
+        ROLE_ADMIN: ROLE_REDACTEUR
+
     password_hashers:
         App\Entity\User:
             algorithm: auto
