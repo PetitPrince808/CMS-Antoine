@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.titre }} — CMS DISII{% endblock %}
+
+{% block body %}
+    {# Fil d'ariane : affiche le parent si la page en a un #}
+    {% if page.parent %}
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('app_page_show', {slug: page.parent.slug}) }}">
+                        {{ page.parent.titre }}
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">{{ page.titre }}</li>
+            </ol>
+        </nav>
+    {% endif %}
+
+    <article>
+        <h1 class="mb-4">{{ page.titre }}</h1>
+
+        <div class="content">
+            {{ page.paragraphes|raw }}
+        </div>
+
+        {# Galerie associée si présente #}
+        {% if page.galerie and page.galerie.images|length > 0 %}
+            <hr>
+            <h2 class="h4 mt-4">{{ page.galerie.nom }}</h2>
+            <div class="row row-cols-2 row-cols-md-3 g-3 mt-2">
+                {% for image in page.galerie.images %}
+                    <div class="col">
+                        <figure class="figure">
+                            <img src="{{ asset(image.url) }}"
+                                 class="figure-img img-fluid rounded"
+                                 alt="{{ image.legende ?? page.galerie.nom }}">
+                            {% if image.legende %}
+                                <figcaption class="figure-caption">{{ image.legende }}</figcaption>
+                            {% endif %}
+                        </figure>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Pages enfants publiées #}
+        {% set enfants_publies = page.children|filter(c => c.statut == 'publie') %}
+        {% if enfants_publies|length > 0 %}
+            <hr>
+            <h2 class="h4 mt-4">Sous-pages</h2>
+            <ul class="list-group mt-2">
+                {% for enfant in enfants_publies %}
+                    <li class="list-group-item">
+                        <a href="{{ path('app_page_show', {slug: enfant.slug}) }}">
+                            {{ enfant.titre }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </article>
+{% endblock %}

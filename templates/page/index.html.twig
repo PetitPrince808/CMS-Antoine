@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pages — CMS DISII{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Pages</h1>
+
+    {% if pages is empty %}
+        <p class="text-muted">Aucune page publiée pour le moment.</p>
+    {% else %}
+        <div class="list-group">
+            {% for page in pages %}
+                <a href="{{ path('app_page_show', {slug: page.slug}) }}"
+                   class="list-group-item list-group-item-action">
+                    {{ page.titre }}
+                    {% if page.categoriePage %}
+                        <span class="badge bg-secondary ms-2">{{ page.categoriePage.nom }}</span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
