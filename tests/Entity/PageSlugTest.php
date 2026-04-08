@@ -35,4 +35,13 @@ class PageSlugTest extends TestCase
 
         $this->assertSame('ca-la-test', $page->getSlug());
     }
+
+    public function testTitreNullProduitsSlugNull(): void
+    {
+        $page = new Page();
+        // Sans setTitre(), titre reste null — le slug doit aussi rester null
+        $page->generateSlug();
+
+        $this->assertNull($page->getSlug());
+    }
 }

@@ -131,18 +131,41 @@ class Page
     public function setCategoriePage(?CategoriePage $categoriePage): static { $this->categoriePage = $categoriePage; return $this; }
 
     /**
-     * Appelé automatiquement par Doctrine avant une insertion ou une mise à jour.
-     * Génère le slug depuis le titre uniquement si aucun slug n'a été saisi manuellement.
+     * Avant l'insertion, génère le slug si aucun n'est défini.
      */
     #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->generateSlug();
+    }
+
+    /**
+     * Avant chaque mise à jour, régénère le slug si nécessaire
+     * et met à jour la date de modification.
+     */
     #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->generateSlug();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Génère le slug depuis le titre uniquement si aucun slug n'a été saisi manuellement.
+     */
     public function generateSlug(): void
     {
         if (!empty($this->slug)) {
             return;
         }
 
+        // Si le titre est vide/null, le slug reste null
+        if (empty($this->titre)) {
+            $this->slug = null;
+            return;
+        }
+
         $slugger = new AsciiSlugger('fr');
-        $this->slug = strtolower($slugger->slug($this->titre ?? ''));
+        $this->slug = strtolower($slugger->slug($this->titre));
     }
 }
