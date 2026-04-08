@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * Entité représentant une page de contenu statique du site.
@@ -15,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Le statut peut valoir : 'brouillon', 'publie', 'archive'.
  */
 #[ORM\Entity(repositoryClass: PageRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Page
 {
     #[ORM\Id]
@@ -127,4 +129,20 @@ class Page
 
     public function getCategoriePage(): ?CategoriePage { return $this->categoriePage; }
     public function setCategoriePage(?CategoriePage $categoriePage): static { $this->categoriePage = $categoriePage; return $this; }
+
+    /**
+     * Appelé automatiquement par Doctrine avant une insertion ou une mise à jour.
+     * Génère le slug depuis le titre uniquement si aucun slug n'a été saisi manuellement.
+     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug(): void
+    {
+        if (!empty($this->slug)) {
+            return;
+        }
+
+        $slugger = new AsciiSlugger('fr');
+        $this->slug = strtolower($slugger->slug($this->titre ?? ''));
+    }
 }
