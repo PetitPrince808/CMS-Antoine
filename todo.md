@@ -22,33 +22,31 @@
 ### Tests unitaires
 - [x] UserTest
 - [x] ArticleTest
-- [x] PageTest
+- [x] PageTest + PageSlugTest
 - [x] GalerieTest
 - [x] ImageTest
+- [x] CategorieArticleTest
+- [x] TagTest
+- [x] CommentaireTest
+- [x] CategoriePageTest
+
+### EasyAdmin
+- [x] Dashboard
+- [x] CrudController User
+- [x] CrudController Article + CategorieArticle + Tag + Commentaire
+- [x] CrudController Page + CategoriePage
+- [x] CrudController Galerie + Image
+- [x] Restrictions par rôle sur les CRUD
+
+### Pages
+- [x] Slug auto-généré (AsciiSlugger, lifecycle callbacks)
+- [x] Éditeur riche dans l'admin (TextEditorField EasyAdmin 5)
+- [x] Contrôleur front + templates Bootstrap 5
+- [x] Arborescence parent/enfant (fil d'ariane + sous-pages)
 
 ---
 
 ## ❌ À faire
-
-### Tests manquants
-- [ ] CategorieArticleTest
-- [ ] TagTest
-- [ ] CommentaireTest
-- [ ] CategoriePageTest
-
-### EasyAdmin (étape prioritaire)
-- [ ] Dashboard
-- [ ] CrudController User
-- [ ] CrudController Article + CategorieArticle + Tag + Commentaire
-- [ ] CrudController Page + CategoriePage
-- [ ] CrudController Galerie + Image
-- [ ] Restrictions par rôle sur les CRUD
-
-### Pages
-- [ ] Installer CKEditor
-- [ ] CRUD Pages (front)
-- [ ] Gestion slug + SEO
-- [ ] Arborescence parent/enfant dans l'admin
 
 ### Blog
 - [ ] CRUD Articles (front)
