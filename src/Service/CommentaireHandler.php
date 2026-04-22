@@ -7,6 +7,9 @@ use App\Entity\Commentaire;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Gère la soumission de commentaires : association, statut initial et persistance.
+ */
 class CommentaireHandler
 {
     public function __construct(private readonly EntityManagerInterface $em) {}
