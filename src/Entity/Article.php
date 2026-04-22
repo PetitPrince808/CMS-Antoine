@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Article
 {
     #[ORM\Id]
@@ -31,6 +33,10 @@ class Article
     /** Valeurs possibles : 'brouillon', 'publie', 'archive' */
     #[ORM\Column(length: 20)]
     private string $statut = 'brouillon';
+
+    /** Slug = URL conviviale ex: "mon-article" — doit être unique */
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
+    private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     private ?CategorieArticle $categorieArticle = null;
@@ -113,4 +119,45 @@ class Article
     public function getAuteur(): ?User { return $this->auteur; }
 
     public function setAuteur(?User $auteur): static { $this->auteur = $auteur; return $this; }
+
+    public function getSlug(): ?string { return $this->slug; }
+
+    public function setSlug(?string $slug): static { $this->slug = $slug; return $this; }
+
+    /**
+     * Avant l'insertion, génère le slug si aucun n'est défini.
+     */
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->generateSlug();
+    }
+
+    /**
+     * Avant chaque mise à jour, régénère le slug si nécessaire.
+     */
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->generateSlug();
+    }
+
+    /**
+     * Génère le slug depuis le titre uniquement si aucun slug n'a été saisi manuellement.
+     */
+    public function generateSlug(): void
+    {
+        if (!empty($this->slug)) {
+            return;
+        }
+
+        // Si le titre est vide/null, le slug reste null
+        if (empty($this->titre)) {
+            $this->slug = null;
+            return;
+        }
+
+        $slugger = new AsciiSlugger('fr');
+        $this->slug = strtolower($slugger->slug($this->titre));
+    }
 }
