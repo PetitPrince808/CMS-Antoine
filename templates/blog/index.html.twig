@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog — CMS DISII{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Blog</h1>
+
+    {% if articles is empty %}
+        <p class="text-muted">Aucun article publié pour le moment.</p>
+    {% else %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for article in articles %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="card-title h5">
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}"
+                                   class="text-decoration-none">
+                                    {{ article.titre }}
+                                </a>
+                            </h2>
+                            <div class="mb-2">
+                                {% if article.categorieArticle %}
+                                    <span class="badge bg-primary">{{ article.categorieArticle.nom }}</span>
+                                {% endif %}
+                                {% for tag in article.tags %}
+                                    <span class="badge bg-secondary">{{ tag.nom }}</span>
+                                {% endfor %}
+                            </div>
+                            {% if article.contenu %}
+                                <p class="card-text text-muted">
+                                    {{ article.contenu|striptags|slice(0, 150) }}…
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer text-muted small">
+                            {% if article.datePublication %}
+                                {{ article.datePublication|date('d/m/Y') }}
+                            {% endif %}
+                            {% if article.auteur %}
+                                — {{ article.auteur.nom }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

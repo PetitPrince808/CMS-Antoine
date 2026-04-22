@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.titre }} — CMS DISII{% endblock %}
+
+{% block body %}
+    <article>
+        <h1 class="mb-2">{{ article.titre }}</h1>
+
+        <p class="text-muted small mb-4">
+            {% if article.datePublication %}
+                Publié le {{ article.datePublication|date('d/m/Y') }}
+            {% endif %}
+            {% if article.auteur %}
+                par {{ article.auteur.nom }}
+            {% endif %}
+            {% if article.categorieArticle %}
+                —
+                <span class="badge bg-primary">{{ article.categorieArticle.nom }}</span>
+            {% endif %}
+            {% for tag in article.tags %}
+                <span class="badge bg-secondary">{{ tag.nom }}</span>
+            {% endfor %}
+        </p>
+
+        <div class="content mb-5">
+            {{ article.contenu|raw }}
+        </div>
+    </article>
+
+    <section class="mt-4">
+        <h2 class="h4 mb-3">Commentaires ({{ commentaires|length }})</h2>
+
+        {% for commentaire in commentaires %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p class="card-text">{{ commentaire.contenu }}</p>
+                    <p class="card-text text-muted small">
+                        {% if commentaire.auteur %}{{ commentaire.auteur.nom }} — {% endif %}
+                        {{ commentaire.date|date('d/m/Y H:i') }}
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-muted">Aucun commentaire pour le moment.</p>
+        {% endfor %}
+
+        <hr class="my-4">
+
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <h3 class="h5 mb-3">Laisser un commentaire</h3>
+
+            {% for flash in app.flashes('success') %}
+                <div class="alert alert-success">{{ flash }}</div>
+            {% endfor %}
+
+            {{ form_start(form, {action: path('app_blog_comment', {slug: article.slug}), method: 'POST'}) }}
+                {{ form_row(form.contenu) }}
+                <button type="submit" class="btn btn-primary mt-2">Envoyer</button>
+            {{ form_end(form) }}
+        {% else %}
+            <p class="text-muted">
+                <a href="{{ path('app_login') }}">Connectez-vous</a> pour laisser un commentaire.
+            </p>
+        {% endif %}
+    </section>
+{% endblock %}

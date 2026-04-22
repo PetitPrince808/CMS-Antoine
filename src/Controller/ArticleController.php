@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Commentaire;
+use App\Form\CommentaireType;
+use App\Repository\ArticleRepository;
+use App\Service\CommentaireHandler;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
+class ArticleController extends AbstractController
+{
+    /**
+     * Liste tous les articles publiés.
+     */
+    #[Route('/blog', name: 'app_blog_index')]
+    public function index(ArticleRepository $articleRepository): Response
+    {
+        return $this->render('blog/index.html.twig', [
+            'articles' => $articleRepository->findPublished(),
+        ]);
+    }
+
+    /**
+     * Affiche un article publié avec ses commentaires approuvés et le formulaire de commentaire.
+     */
+    #[Route('/blog/{slug}', name: 'app_blog_show')]
+    public function show(string $slug, ArticleRepository $articleRepository): Response
+    {
+        $article = $articleRepository->findOnePublishedBySlug($slug);
+
+        if (!$article) {
+            throw $this->createNotFoundException("Article introuvable : $slug");
+        }
+
+        $commentaires = $article->getCommentaires()->filter(
+            fn(Commentaire $c) => $c->getStatut() === 'approuve'
+        );
+
+        $form = $this->createForm(CommentaireType::class, new Commentaire());
+
+        return $this->render('blog/show.html.twig', [
+            'article'      => $article,
+            'commentaires' => $commentaires,
+            'form'         => $form,
+        ]);
+    }
+
+    /**
+     * Reçoit la soumission du formulaire de commentaire.
+     * Réservé aux utilisateurs connectés (#[IsGranted]).
+     */
+    #[Route('/blog/{slug}/commenter', name: 'app_blog_comment', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function comment(
+        string $slug,
+        Request $request,
+        ArticleRepository $articleRepository,
+        CommentaireHandler $handler,
+    ): Response {
+        $article = $articleRepository->findOnePublishedBySlug($slug);
+
+        if (!$article) {
+            throw $this->createNotFoundException("Article introuvable : $slug");
+        }
+
+        $commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $handler->submit($commentaire, $article, $user);
+            $this->addFlash('success', 'Votre commentaire a été soumis et attend modération.');
+        }
+
+        return $this->redirectToRoute('app_blog_show', ['slug' => $slug]);
+    }
+}
