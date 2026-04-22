@@ -12,7 +12,7 @@ class PageController extends AbstractController
     /**
      * Page d'accueil — affiche la liste des pages publiées.
      */
-    #[Route('/', name: 'app_home')]
+    #[Route('/', name: 'app_home', methods: ['GET'])]
     public function home(PageRepository $pageRepository): Response
     {
         $pages = $pageRepository->findPublishedRoots();
@@ -25,7 +25,7 @@ class PageController extends AbstractController
     /**
      * Liste toutes les pages racines publiées.
      */
-    #[Route('/pages', name: 'app_page_index')]
+    #[Route('/pages', name: 'app_page_index', methods: ['GET'])]
     public function index(PageRepository $pageRepository): Response
     {
         $pages = $pageRepository->findPublishedRoots();
@@ -39,7 +39,7 @@ class PageController extends AbstractController
      * Affiche une page par son slug.
      * Retourne 404 si la page n'existe pas ou n'est pas publiée.
      */
-    #[Route('/pages/{slug}', name: 'app_page_show')]
+    #[Route('/pages/{slug}', name: 'app_page_show', methods: ['GET'])]
     public function show(string $slug, PageRepository $pageRepository): Response
     {
         $page = $pageRepository->findOnePublishedBySlug($slug);

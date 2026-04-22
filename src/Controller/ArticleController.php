@@ -18,7 +18,7 @@ class ArticleController extends AbstractController
     /**
      * Liste tous les articles publiés.
      */
-    #[Route('/blog', name: 'app_blog_index')]
+    #[Route('/blog', name: 'app_blog_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): Response
     {
         return $this->render('blog/index.html.twig', [
@@ -29,7 +29,7 @@ class ArticleController extends AbstractController
     /**
      * Affiche un article publié avec ses commentaires approuvés et le formulaire de commentaire.
      */
-    #[Route('/blog/{slug}', name: 'app_blog_show')]
+    #[Route('/blog/{slug}', name: 'app_blog_show', methods: ['GET'])]
     public function show(string $slug, ArticleRepository $articleRepository, CommentaireRepository $commentaireRepository): Response
     {
         $article = $articleRepository->findOnePublishedBySlug($slug);
