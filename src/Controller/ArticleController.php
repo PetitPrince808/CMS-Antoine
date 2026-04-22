@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Commentaire;
 use App\Form\CommentaireType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentaireRepository;
 use App\Service\CommentaireHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class ArticleController extends AbstractController
      * Affiche un article publié avec ses commentaires approuvés et le formulaire de commentaire.
      */
     #[Route('/blog/{slug}', name: 'app_blog_show')]
-    public function show(string $slug, ArticleRepository $articleRepository): Response
+    public function show(string $slug, ArticleRepository $articleRepository, CommentaireRepository $commentaireRepository): Response
     {
         $article = $articleRepository->findOnePublishedBySlug($slug);
 
@@ -37,11 +38,13 @@ class ArticleController extends AbstractController
             throw $this->createNotFoundException("Article introuvable : $slug");
         }
 
-        $commentaires = $article->getCommentaires()->filter(
-            fn(Commentaire $c) => $c->getStatut() === 'approuve'
-        );
+        // Requête SQL directe — évite de charger tous les commentaires en mémoire
+        $commentaires = $commentaireRepository->findApprovedByArticle($article);
 
-        $form = $this->createForm(CommentaireType::class, new Commentaire());
+        // Formulaire instancié uniquement pour les utilisateurs connectés
+        $form = $this->isGranted('IS_AUTHENTICATED_FULLY')
+            ? $this->createForm(CommentaireType::class, new Commentaire())
+            : null;
 
         return $this->render('blog/show.html.twig', [
             'article'      => $article,

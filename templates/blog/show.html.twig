@@ -46,7 +46,7 @@
 
         <hr class="my-4">
 
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if form %}
             <h3 class="h5 mb-3">Laisser un commentaire</h3>
 
             {% for flash in app.flashes('success') %}
