@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ArticleRepository;
 use App\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,15 +11,17 @@ use Symfony\Component\Routing\Attribute\Route;
 class PageController extends AbstractController
 {
     /**
-     * Page d'accueil — affiche la liste des pages publiées.
+     * Page d'accueil — affiche les pages racines et les derniers articles du blog.
      */
     #[Route('/', name: 'app_home', methods: ['GET'])]
-    public function home(PageRepository $pageRepository): Response
+    public function home(PageRepository $pageRepository, ArticleRepository $articleRepository): Response
     {
         $pages = $pageRepository->findPublishedRoots();
+        $latestArticles = $articleRepository->findLatest(3);
 
         return $this->render('page/index.html.twig', [
             'pages' => $pages,
+            'latestArticles' => $latestArticles,
         ]);
     }
 

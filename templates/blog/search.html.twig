@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultats de recherche — Nexo{% endblock %}
+
+{% block body %}
+    <h1 class="mb-4">Résultats pour "{{ query }}"</h1>
+
+    {% if articles is empty %}
+        <div class="alert alert-info">
+            Aucun article ne correspond à votre recherche.
+        </div>
+        <a href="{{ path('app_blog_index') }}" class="btn btn-outline-primary">Retour au blog</a>
+    {% else %}
+        <p class="text-muted">{{ articles|length }} article(s) trouvé(s).</p>
+        
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for article in articles %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h5">
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}" class="text-decoration-none">
+                                    {{ article.titre }}
+                                </a>
+                            </h2>
+                            <p class="card-text text-muted">
+                                {{ article.contenu|striptags|slice(0, 150) }}…
+                            </p>
+                        </div>
+                        <div class="card-footer bg-white border-0 text-muted small">
+                            {{ article.datePublication|date('d/m/Y') }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

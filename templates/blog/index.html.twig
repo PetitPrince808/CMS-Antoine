@@ -1,49 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Blog — CMS DISII{% endblock %}
+{% block title %}Journal — Nexo{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Blog</h1>
+    <div class="py-5 mb-5 border-bottom">
+        <h1 class="display-3 fw-bold" style="letter-spacing: -0.04em;">Journal</h1>
+        <p class="lead text-muted">Réflexions sur le futur du design et de la technologie.</p>
+    </div>
 
     {% if articles is empty %}
-        <p class="text-muted">Aucun article publié pour le moment.</p>
+        <div class="py-5 text-center">
+            <p class="text-muted">Aucun article n'est disponible pour le moment.</p>
+        </div>
     {% else %}
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            {% for article in articles %}
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="card-title h5">
-                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}"
-                                   class="text-decoration-none">
-                                    {{ article.titre }}
-                                </a>
-                            </h2>
-                            <div class="mb-2">
-                                {% if article.categorieArticle %}
-                                    <span class="badge bg-primary">{{ article.categorieArticle.nom }}</span>
-                                {% endif %}
-                                {% for tag in article.tags %}
-                                    <span class="badge bg-secondary">{{ tag.nom }}</span>
-                                {% endfor %}
+        <div class="row">
+            <div class="col-lg-10">
+                {% for article in articles %}
+                    <article class="mb-5 pb-5 border-bottom">
+                        <div class="row align-items-start g-4">
+                            <div class="col-md-3">
+                                <time class="text-muted small fw-bold text-uppercase" style="letter-spacing: 0.1em;">
+                                    {{ article.datePublication|date('d M Y') }}
+                                </time>
+                                <div class="mt-2">
+                                    <span class="badge bg-light text-primary">{{ article.categorieArticle.nom|default('Général') }}</span>
+                                </div>
                             </div>
-                            {% if article.contenu %}
-                                <p class="card-text text-muted">
-                                    {{ article.contenu|striptags|slice(0, 150) }}…
+                            <div class="col-md-9">
+                                <h2 class="display-6 fw-bold mb-3">
+                                    <a href="{{ path('app_blog_show', {slug: article.slug}) }}"
+                                       class="text-decoration-none text-dark hover-violet transition-all">
+                                        {{ article.titre }}
+                                    </a>
+                                </h2>
+                                <p class="fs-5 text-muted mb-4" style="max-width: 700px;">
+                                    {{ article.contenu|striptags|slice(0, 200) }}...
                                 </p>
-                            {% endif %}
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}" class="btn btn-sm btn-outline-dark">
+                                    Lire l'article &rarr;
+                                </a>
+                            </div>
                         </div>
-                        <div class="card-footer text-muted small">
-                            {% if article.datePublication %}
-                                {{ article.datePublication|date('d/m/Y') }}
-                            {% endif %}
-                            {% if article.auteur %}
-                                — {{ article.auteur.nom }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+                    </article>
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 {% endblock %}

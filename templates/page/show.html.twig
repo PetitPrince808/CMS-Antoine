@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ page.titre }} — CMS DISII{% endblock %}
+{% block title %}{{ page.titre }} — Nexo{% endblock %}
+
+{% block meta_description %}{{ page.metaDescription|default('Découvrez la page ' ~ page.titre ~ ' sur Nexo.') }}{% endblock %}
 
 {% block body %}
     {# Fil d'ariane : affiche le parent si la page en a un #}

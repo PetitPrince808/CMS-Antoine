@@ -27,6 +27,25 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * Recherche des articles.
+     */
+    #[Route('/blog/recherche', name: 'app_blog_search', methods: ['GET'])]
+    public function search(Request $request, ArticleRepository $articleRepository): Response
+    {
+        $query = $request->query->get('q', '');
+        $articles = [];
+
+        if (!empty($query)) {
+            $articles = $articleRepository->search($query);
+        }
+
+        return $this->render('blog/search.html.twig', [
+            'articles' => $articles,
+            'query'    => $query,
+        ]);
+    }
+
+    /**
      * Affiche un article publié avec ses commentaires approuvés et le formulaire de commentaire.
      */
     #[Route('/blog/{slug}', name: 'app_blog_show', methods: ['GET'])]

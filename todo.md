@@ -19,46 +19,28 @@
 - [x] Accès `/admin/*` restreint à ROLE_REDACTEUR
 - [x] Commande `app:create-admin` pour le développement
 
-### Tests unitaires
-- [x] UserTest
-- [x] ArticleTest
-- [x] PageTest + PageSlugTest
-- [x] GalerieTest
-- [x] ImageTest
-- [x] CategorieArticleTest
-- [x] TagTest
-- [x] CommentaireTest
-- [x] CategoriePageTest
+### Tests unitaires & fonctionnels
+- [x] Tests Entités (User, Article, Page, etc.)
+- [x] Tests Contrôleurs (Blog, Galerie, Page)
 
 ### EasyAdmin
-- [x] Dashboard
-- [x] CrudController User
-- [x] CrudController Article + CategorieArticle + Tag + Commentaire
-- [x] CrudController Page + CategoriePage
-- [x] CrudController Galerie + Image
+- [x] Dashboard de synthèse
+- [x] Gestion de toutes les entités
+- [x] Upload d'images sécurisé avec prévisualisation
 - [x] Restrictions par rôle sur les CRUD
 
-### Pages
-- [x] Slug auto-généré (AsciiSlugger, lifecycle callbacks)
-- [x] Éditeur riche dans l'admin (TextEditorField EasyAdmin 5)
-- [x] Contrôleur front + templates Bootstrap 5
-- [x] Arborescence parent/enfant (fil d'ariane + sous-pages)
+### Front-office (Templates Twig + Bootstrap 5)
+- [x] Navigation dynamique (MenuBuilder)
+- [x] Pages : arborescence, fil d'ariane, rendu WYSIWYG
+- [x] Blog : listing, lecture, recherche par mot-clé
+- [x] Galeries : affichage en grille avec légendes
+- [x] Commentaires : soumission front + modération back
+- [x] SEO : balises méta dynamiques (description, titres)
+- [x] Accueil : design moderne avec mise en avant des derniers articles
 
 ---
 
-## ❌ À faire
-
-### Blog
-- [ ] CRUD Articles (front)
-- [ ] Gestion catégories + tags
-- [ ] Commentaires avec modération
-
-### Galeries
-- [ ] Upload d'images sécurisé
-- [ ] Affichage galerie avec légendes
-
-### Front
-- [ ] Templates Twig de base (layout, nav, footer)
-- [ ] Page d'accueil
-- [ ] Page article / liste articles
-- [ ] Page galerie
+## 🚀 Améliorations futures possibles
+- [ ] Système de newsletter
+- [ ] Export PDF des articles
+- [ ] Interface multilingue

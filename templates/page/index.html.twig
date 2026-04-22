@@ -1,23 +1,90 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pages — CMS DISII{% endblock %}
+{% block title %}{{ latestArticles is defined ? 'Accueil — Nexo' : 'Pages — Nexo' }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-4">Pages</h1>
-
-    {% if pages is empty %}
-        <p class="text-muted">Aucune page publiée pour le moment.</p>
-    {% else %}
-        <div class="list-group">
-            {% for page in pages %}
-                <a href="{{ path('app_page_show', {slug: page.slug}) }}"
-                   class="list-group-item list-group-item-action">
-                    {{ page.titre }}
-                    {% if page.categoriePage %}
-                        <span class="badge bg-secondary ms-2">{{ page.categoriePage.nom }}</span>
-                    {% endif %}
-                </a>
-            {% endfor %}
+    {% if latestArticles is defined %}
+        <div class="py-5 mb-5 mt-md-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-2 fw-bold mb-4" style="letter-spacing: -0.04em; line-height: 0.95;">La gestion de contenu,<br><span class="text-primary">en toute sérénité.</span></h1>
+                    <p class="lead text-muted mb-5 fs-4 fw-normal" style="max-width: 600px;">Nexo est une plateforme minimaliste conçue pour les créateurs qui exigent clarté, performance et élégance.</p>
+                    <div class="d-flex gap-3">
+                        <a href="{{ path('app_page_index') }}" class="btn btn-primary px-4 py-3">Explorer le contenu</a>
+                        <a href="{{ path('app_blog_index') }}" class="btn btn-outline-dark px-4 py-3">Journal de bord</a>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <section class="mb-5 py-5 border-top">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div>
+                    <h2 class="h1 fw-bold mb-2">Dernières publications</h2>
+                    <p class="text-muted mb-0">Nos réflexions les plus récentes sur le design et la tech.</p>
+                </div>
+                <a href="{{ path('app_blog_index') }}" class="text-primary fw-bold text-decoration-none d-none d-md-block">Voir toutes les archives &rarr;</a>
+            </div>
+            <div class="row g-5">
+                {% for article in latestArticles %}
+                    <div class="col-md-4">
+                        <article class="h-100 position-relative">
+                            <div class="mb-3">
+                                <span class="badge bg-light text-primary">{{ article.categorieArticle.nom|default('Général') }}</span>
+                            </div>
+                            <h3 class="h4 fw-bold mb-3">
+                                <a href="{{ path('app_blog_show', {slug: article.slug}) }}" class="text-decoration-none text-dark stretched-link hover-underline">
+                                    {{ article.titre }}
+                                </a>
+                            </h3>
+                            <p class="text-muted small mb-4">
+                                {{ article.contenu|striptags|slice(0, 120) }}...
+                            </p>
+                            <time class="text-muted tiny text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 0.1em;">
+                                {{ article.datePublication|date('d M Y') }}
+                            </time>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     {% endif %}
+
+    <section class="mt-5 pt-5 border-top">
+        <h2 class="h4 fw-bold mb-4 opacity-50 text-uppercase" style="letter-spacing: 0.2em;">{{ latestArticles is defined ? 'Structure' : 'Index des pages' }}</h2>
+
+        {% if pages is empty %}
+            <p class="text-muted">Aucune page publiée.</p>
+        {% else %}
+            <div class="row g-4">
+                {% for page in pages %}
+                    <div class="col-md-6">
+                        <a href="{{ path('app_page_show', {slug: page.slug}) }}"
+                           class="group d-flex align-items-center p-4 bg-white text-decoration-none text-dark border-bottom hover-bg-light transition-all">
+                            <div class="flex-grow-1">
+                                <div class="fw-bold fs-5 mb-1 group-hover-translate">{{ page.titre }}</div>
+                                {% if page.categoriePage %}
+                                    <span class="text-muted small fw-medium">{{ page.categoriePage.nom }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="opacity-0 group-hover-opacity-100 transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <style>
+        .hover-underline:hover { text-decoration: underline !important; }
+        .transition-all { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-bg-light:hover { background-color: #f9f9fb !important; }
+        .group:hover .group-hover-opacity-100 { opacity: 1 !important; }
+        .group:hover .group-hover-translate { transform: translateX(10px); }
+        .group .group-hover-translate { transition: transform 0.3s ease; }
+    </style>
 {% endblock %}

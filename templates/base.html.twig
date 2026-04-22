@@ -3,69 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}CMS DISII{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Un CMS performant pour gérer vos contenus, votre blog et vos galeries photos.{% endblock %}">
+    <title>{% block title %}Nexo{% endblock %}</title>
 
-    {# Bootstrap 5 via CDN — pas de build step nécessaire #}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossorigin="anonymous">
+    {# Google Fonts - Inter #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --nexo-bg: #ffffff;
+            --nexo-secondary-bg: #f8f7ff; /* Fond légèrement lilas */
+            --nexo-accent: #7c3aed; /* Violet moderne */
+            --nexo-accent-soft: #f5f3ff;
+            --nexo-text: #1d1d1f;
+            --nexo-muted: #86868b;
+            --nexo-border: #e8e8ed;
+            --nexo-radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--nexo-bg);
+            color: var(--nexo-text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+
+        /* Navbar Sophistiquée */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid var(--nexo-border);
+            padding: 0.8rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.03em;
+            color: var(--nexo-text) !important;
+        }
+
+        .navbar-brand span { color: var(--nexo-accent); }
+
+        .nav-link {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--nexo-text) !important;
+            margin: 0 0.5rem;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-link:hover { opacity: 1; color: var(--nexo-accent) !important; }
+
+        /* Recherche intégrée */
+        .search-container {
+            position: relative;
+            background: var(--nexo-secondary-bg);
+            border-radius: 10px;
+            padding: 2px 12px;
+            transition: all 0.2s ease;
+        }
+
+        .search-container:focus-within {
+            background: #fff;
+            box-shadow: 0 0 0 2px var(--nexo-accent);
+        }
+
+        .search-input {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 0.9rem;
+            padding: 8px 0;
+            width: 180px;
+        }
+
+        /* Cartes & Éléments de contenu */
+        .card {
+            border: 1px solid var(--nexo-border);
+            border-radius: var(--nexo-radius);
+            background: #fff;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -12px rgba(124, 58, 237, 0.1), 0 18px 36px -18px rgba(0,0,0,0.15);
+            border-color: var(--nexo-accent-soft);
+        }
+
+        /* Typographie Éditoriale */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .text-muted { color: var(--nexo-muted) !important; }
+        .text-primary { color: var(--nexo-accent) !important; }
+
+        /* Boutons raffinés */
+        .btn {
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background-color: var(--nexo-accent);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #6d28d9;
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-dark {
+            background-color: var(--nexo-text);
+            border: none;
+        }
+
+        /* Footer discret */
+        .footer {
+            background: var(--nexo-secondary-bg);
+            border-top: 1px solid var(--nexo-border);
+            padding: 5rem 0 3rem;
+        }
+
+        /* Badges */
+        .badge {
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            padding: 0.6em 1em;
+            border-radius: 6px;
+        }
+
+        .bg-light.text-primary {
+            background-color: var(--nexo-accent-soft) !important;
+            color: var(--nexo-accent) !important;
+        }
+        .hover-violet {
+            transition: color 0.2s ease;
+        }
+
+        .hover-violet:hover {
+            color: var(--nexo-accent) !important;
+        }
+    </style>
 
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg sticky-top mb-5">
         <div class="container">
-            <a class="navbar-brand" href="{{ path('app_home') }}">CMS DISII</a>
-            <button class="navbar-toggler" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <a class="navbar-brand" href="{{ path('app_home') }}">NEXO<span>.</span></a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto">
-                    {# menu_pages est fourni par MenuBuilder injecté dans twig.yaml #}
+                <ul class="navbar-nav mx-auto">
                     {% for page in menu_pages.menuPages %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_page_show', {slug: page.slug}) }}">
-                                {{ page.titre }}
-                            </a>
+                            <a class="nav-link" href="{{ path('app_page_show', {slug: page.slug}) }}">{{ page.titre }}</a>
                         </li>
                     {% endfor %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_blog_index') }}">Blog</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('galerie_index') }}">Galeries</a>
+                    </li>
                 </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if app.user %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('admin') }}">Admin</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-                        </li>
-                    {% endif %}
-                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <form class="search-container d-none d-md-block" action="{{ path('app_blog_search') }}" method="GET">
+                        <input class="form-control search-input" type="search" name="q" placeholder="Rechercher..." aria-label="Search">
+                    </form>
+
+                    <ul class="navbar-nav align-items-center">
+                        {% if app.user %}
+                            <li class="nav-item">
+                                <a class="btn btn-sm btn-dark px-3" href="{{ path('admin') }}">Console</a>
+                            </li>
+                            <li class="nav-item ms-2">
+                                <a class="nav-link text-danger small p-0" href="{{ path('app_logout') }}" title="Déconnexion">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="btn btn-sm btn-outline-dark px-3" href="{{ path('app_login') }}">Connexion</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="container py-4">
+    <main class="container mb-5">
         {% block body %}{% endblock %}
     </main>
 
-    <footer class="bg-dark text-light py-3 mt-5">
+    <footer class="footer mt-5">
         <div class="container text-center">
-            <small>CMS DISII &copy; {{ "now"|date("Y") }}</small>
+            <div class="mb-4">
+                <span class="navbar-brand">NEXO<span>.</span></span>
+            </div>
+            <p class="text-muted mb-0 small fw-medium">Propulsé par Symfony 7.4 & Nexo Design System</p>
+            <p class="text-muted mt-2 small">&copy; {{ "now"|date("Y") }} — Fabriqué avec soin à Chartres</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmO0fHBW2I8TZzXFqQHWzpktNtYl"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     {% block javascripts %}{% endblock %}
 </body>
 </html>

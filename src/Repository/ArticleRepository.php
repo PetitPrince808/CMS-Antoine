@@ -34,6 +34,39 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Retourne les X derniers articles publiés.
+     *
+     * @return Article[]
+     */
+    public function findLatest(int $limit = 3): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.statut = :statut')
+            ->setParameter('statut', 'publie')
+            ->orderBy('a.datePublication', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Recherche des articles publiés par mot-clé.
+     *
+     * @return Article[]
+     */
+    public function search(string $query): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.statut = :statut')
+            ->andWhere('a.titre LIKE :query OR a.contenu LIKE :query')
+            ->setParameter('statut', 'publie')
+            ->setParameter('query', '%' . $query . '%')
+            ->orderBy('a.datePublication', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Retourne un article publié par son slug, ou null s'il n'existe pas.
      */
     public function findOnePublishedBySlug(string $slug): ?Article

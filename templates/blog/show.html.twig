@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ article.titre }} — CMS DISII{% endblock %}
+{% block title %}{{ article.titre }} — Nexo{% endblock %}
+
+{% block meta_description %}{{ article.metaDescription|default(article.contenu|striptags|slice(0, 150) ~ '...') }}{% endblock %}
 
 {% block body %}
     <article>
@@ -15,10 +17,10 @@
             {% endif %}
             {% if article.categorieArticle %}
                 —
-                <span class="badge bg-primary">{{ article.categorieArticle.nom }}</span>
+                <span class="badge bg-light text-primary">{{ article.categorieArticle.nom }}</span>
             {% endif %}
             {% for tag in article.tags %}
-                <span class="badge bg-secondary">{{ tag.nom }}</span>
+                <span class="badge bg-light text-muted">{{ tag.nom }}</span>
             {% endfor %}
         </p>
 
@@ -28,14 +30,14 @@
     </article>
 
     <section class="mt-4">
-        <h2 class="h4 mb-3">Commentaires ({{ commentaires|length }})</h2>
+        <h2 class="h4 mb-3 fw-bold">Commentaires ({{ commentaires|length }})</h2>
 
         {% for commentaire in commentaires %}
-            <div class="card mb-3">
+            <div class="card mb-3 border-0 bg-light">
                 <div class="card-body">
                     <p class="card-text">{{ commentaire.contenu }}</p>
                     <p class="card-text text-muted small">
-                        {% if commentaire.auteur %}{{ commentaire.auteur.nom }} — {% endif %}
+                        {% if commentaire.auteur %}<span class="fw-bold text-dark">{{ commentaire.auteur.nom }}</span> — {% endif %}
                         {{ commentaire.date|date('d/m/Y H:i') }}
                     </p>
                 </div>
@@ -44,18 +46,18 @@
             <p class="text-muted">Aucun commentaire pour le moment.</p>
         {% endfor %}
 
-        <hr class="my-4">
+        <hr class="my-5">
 
         {% if form %}
-            <h3 class="h5 mb-3">Laisser un commentaire</h3>
+            <h3 class="h5 mb-4 fw-bold">Laisser un commentaire</h3>
 
             {% for flash in app.flashes('success') %}
-                <div class="alert alert-success">{{ flash }}</div>
+                <div class="alert alert-success border-0 bg-light text-success">{{ flash }}</div>
             {% endfor %}
 
             {{ form_start(form, {action: path('app_blog_comment', {slug: article.slug}), method: 'POST'}) }}
-                {{ form_row(form.contenu) }}
-                <button type="submit" class="btn btn-primary mt-2">Envoyer</button>
+                {{ form_row(form.contenu, {attr: {class: 'form-control border-0 bg-light', rows: 4, placeholder: 'Votre message...'}}) }}
+                <button type="submit" class="btn btn-primary mt-3">Envoyer le commentaire</button>
             {{ form_end(form) }}
         {% else %}
             <p class="text-muted">

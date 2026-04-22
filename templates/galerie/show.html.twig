@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ galerie.nom }} - Galeries{% endblock %}
+
+{% block body %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('galerie_index') }}">Galeries</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ galerie.nom }}</li>
+        </ol>
+    </nav>
+
+    <div class="mb-5">
+        <h1>{{ galerie.nom }}</h1>
+        {% if galerie.description %}
+            <p class="lead text-muted">{{ galerie.description }}</p>
+        {% endif %}
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for image in galerie.images %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ asset(image.url) }}" 
+                         class="card-img-top img-fluid rounded" 
+                         alt="{{ image.legende|default(galerie.nom ~ ' - Image ' ~ loop.index) }}"
+                         style="object-fit: cover; height: 250px;">
+                    {% if image.legende %}
+                        <div class="card-body p-2">
+                            <p class="card-text small text-center text-muted">{{ image.legende }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Cette galerie ne contient aucune image pour le moment.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5">
+        <a href="{{ path('galerie_index') }}" class="btn btn-dark">
+            &larr; Retour aux galeries
+        </a>
+    </div>
+{% endblock %}

@@ -2,15 +2,6 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Article;
-use App\Entity\CategorieArticle;
-use App\Entity\CategoriePage;
-use App\Entity\Commentaire;
-use App\Entity\Galerie;
-use App\Entity\Image;
-use App\Entity\Page;
-use App\Entity\Tag;
-use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -18,7 +9,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-// Seuls les rédacteurs et admins peuvent accéder au back-office
 #[IsGranted('ROLE_REDACTEUR')]
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
 class DashboardController extends AbstractDashboardController
@@ -31,35 +21,33 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('CMS DISII')
-            ->setFaviconPath('favicon.ico')
+            ->setTitle('NEXO')
             ->renderContentMaximized();
     }
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home');
+        return [
+            MenuItem::linkToDashboard('Tableau de bord', 'fa fa-home'),
+            MenuItem::linkToRoute('Retour au site', 'fa fa-arrow-left', 'app_home'),
 
-        yield MenuItem::section('Blog');
-        yield MenuItem::linkToCrud('Articles', 'fa fa-newspaper', Article::class);
-        yield MenuItem::linkToCrud('Catégories', 'fa fa-tags', CategorieArticle::class);
-        yield MenuItem::linkToCrud('Tags', 'fa fa-tag', Tag::class);
-        // Modération des commentaires — réservée aux admins
-        yield MenuItem::linkToCrud('Commentaires', 'fa fa-comments', Commentaire::class)
-            ->setPermission('ROLE_ADMIN');
+            MenuItem::section('Blog'),
+            MenuItem::linkTo(ArticleCrudController::class, 'Articles', 'fa fa-newspaper'),
+            MenuItem::linkTo(CategorieArticleCrudController::class, 'Catégories', 'fa fa-tags'),
+            MenuItem::linkTo(TagCrudController::class, 'Tags', 'fa fa-tag'),
+            MenuItem::linkTo(CommentaireCrudController::class, 'Commentaires', 'fa fa-comments')
+                ->setPermission('ROLE_ADMIN'),
 
-        yield MenuItem::section('Pages');
-        yield MenuItem::linkToCrud('Pages', 'fa fa-file-alt', Page::class);
-        yield MenuItem::linkToCrud('Catégories de pages', 'fa fa-folder', CategoriePage::class);
+            MenuItem::section('Pages'),
+            MenuItem::linkTo(PageCrudController::class, 'Pages', 'fa fa-file-alt'),
+            MenuItem::linkTo(CategoriePageCrudController::class, 'Catégories de pages', 'fa fa-folder'),
 
-        yield MenuItem::section('Médias');
-        yield MenuItem::linkToCrud('Galeries', 'fa fa-images', Galerie::class);
-        yield MenuItem::linkToCrud('Images', 'fa fa-image', Image::class);
+            MenuItem::section('Médias'),
+            MenuItem::linkTo(GalerieCrudController::class, 'Galeries', 'fa fa-images'),
+            MenuItem::linkTo(ImageCrudController::class, 'Images', 'fa fa-image'),
 
-        // Gestion des utilisateurs réservée aux admins
-        yield MenuItem::section('Administration')
-            ->setPermission('ROLE_ADMIN');
-        yield MenuItem::linkToCrud('Utilisateurs', 'fa fa-users', User::class)
-            ->setPermission('ROLE_ADMIN');
+            MenuItem::section('Administration')->setPermission('ROLE_ADMIN'),
+            MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users')->setPermission('ROLE_ADMIN'),
+        ];
     }
 }
