@@ -14,7 +14,7 @@ final class Version20260422162758 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Ajout du champ slug unique sur la table article.';
     }
 
     public function up(Schema $schema): void
