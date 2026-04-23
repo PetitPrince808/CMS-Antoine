@@ -25,6 +25,10 @@
 *.png
 *.gif
 
+# Exception : captures d'écran du README
+!docs/screenshots/*.png
+!docs/screenshots/*.jpg
+
 # Fichiers d'environnement locaux
 .env.dev
 .env.local
