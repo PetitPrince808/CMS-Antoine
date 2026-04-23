@@ -44,6 +44,7 @@ class DashboardController extends AbstractDashboardController
 
             MenuItem::section('Médias'),
             MenuItem::linkTo(GalerieCrudController::class, 'Galeries', 'fa fa-images'),
+            MenuItem::linkTo(CategorieGalerieCrudController::class, 'Catégories de galeries', 'fa fa-folder-open'),
             MenuItem::linkTo(ImageCrudController::class, 'Images', 'fa fa-image'),
 
             MenuItem::section('Administration')->setPermission('ROLE_ADMIN'),

@@ -30,6 +30,9 @@ class Galerie
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'galerie', orphanRemoval: true)]
     private Collection $images;
 
+    #[ORM\ManyToOne(inversedBy: 'galeries')]
+    private ?CategorieGalerie $categorie = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -68,4 +71,7 @@ class Galerie
         }
         return $this;
     }
+
+    public function getCategorie(): ?CategorieGalerie { return $this->categorie; }
+    public function setCategorie(?CategorieGalerie $categorie): static { $this->categorie = $categorie; return $this; }
 }
