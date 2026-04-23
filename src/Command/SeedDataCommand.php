@@ -31,7 +31,7 @@ class SeedDataCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // 1. Utilisateurs
+        // 1. Utilisateurs (admin + rédacteur de démonstration)
         $admin = $this->em->getRepository(User::class)->findOneBy(['email' => 'admin@cms-disii.local']);
         if (!$admin) {
             $admin = new User();
@@ -40,6 +40,16 @@ class SeedDataCommand extends Command
             $admin->setRoles(['ROLE_ADMIN']);
             $admin->setPassword($this->hasher->hashPassword($admin, 'admin1234'));
             $this->em->persist($admin);
+        }
+
+        $redacteur = $this->em->getRepository(User::class)->findOneBy(['email' => 'redacteur@cms-disii.local']);
+        if (!$redacteur) {
+            $redacteur = new User();
+            $redacteur->setEmail('redacteur@cms-disii.local');
+            $redacteur->setNom('Rédacteur démo');
+            $redacteur->setRoles(['ROLE_REDACTEUR']);
+            $redacteur->setPassword($this->hasher->hashPassword($redacteur, 'redac1234'));
+            $this->em->persist($redacteur);
         }
 
         // 2. Catégories & Tags (Vérification existence)
