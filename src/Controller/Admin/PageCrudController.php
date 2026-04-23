@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Page;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
@@ -11,6 +12,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_REDACTEUR')]
@@ -39,5 +42,17 @@ class PageCrudController extends AbstractCrudController
         yield TextareaField::new('metaDescription', 'Méta-description')->hideOnIndex();
         yield DateTimeField::new('createdAt', 'Créée le')->hideOnForm();
         yield DateTimeField::new('updatedAt', 'Modifiée le')->hideOnForm();
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(ChoiceFilter::new('statut', 'Statut')->setChoices([
+                'Brouillon' => 'brouillon',
+                'Publiée'   => 'publie',
+                'Archivée'  => 'archive',
+            ]))
+            ->add(EntityFilter::new('categoriePage', 'Catégorie'))
+            ->add(EntityFilter::new('parent', 'Page parente'));
     }
 }
